@@ -79,4 +79,4 @@ Usage of ./PolyGo:
 
 <img src="images/brainless.gif" width="35%">
 
-| ⚠️ Be careful with **-brainless** option's parameter, it might get your shellcode much longer.
+> ⚠️ Be careful with **-brainless** option's parameter, it might get your shellcode much longer.
