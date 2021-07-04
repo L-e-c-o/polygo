@@ -1,6 +1,6 @@
 # PolyGo
 
-<img src="images/gopher.png" width="35%">
+<img src="images/gopher.png" width="25%">
 
 Polymorphic Linux x86 shellcode engine
 
