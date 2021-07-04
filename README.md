@@ -1,6 +1,6 @@
 # PolyGo
 
-<img src="images/gopher.png" width="35%">
+<img src="images/gopher.png" width="25%">
 
 Polymorphic Linux x86 shellcode engine
 
@@ -79,4 +79,7 @@ Usage of ./PolyGo:
 
 <img src="images/brainless.gif" width="35%">
 
-| ⚠️ Be careful with **-brainless** option's parameter, it might get your shellcode much longer.
+> ⚠️ Be careful with **-brainless** option's parameter, it might get your shellcode much longer.
+
+
+                                                        made with ♥ by leco & atsika
