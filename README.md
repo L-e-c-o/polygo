@@ -104,7 +104,7 @@ nasm -f elf32 revshell.asm
 Then you need to retrieve opcodes from the object file using `objdump`.
 
 ```
-for i in $(objdump -d decode_xor.o |grep "^ " |cut -f2); do echo -En '\x'$i; done;
+for i in $(objdump -d revshell.o |grep "^ " |cut -f2); do echo -En '\x'$i; done;
 ```
 
 Finally, use `echo` to write shellcode to file as raw bytes.
