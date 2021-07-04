@@ -16,6 +16,6 @@ loop:
     jmp short shellcode
 
 addr:
-    call len                      ; push shellcode addr on the stack
+    call len                      ; push shellcode address on the stack
 
 shellcode:

@@ -59,7 +59,7 @@ func swap(shellcode []byte) []byte {
 
 func printShellcode(shellcode []byte) {
 	fmt.Println("\nShellcode len:", len(shellcode))
-	fmt.Println("\nShellcode:")
+	fmt.Println("Shellcode:")
 	for i := range shellcode {
 		fmt.Printf("\\x%02x", shellcode[i])
 	}

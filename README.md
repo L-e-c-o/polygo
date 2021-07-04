@@ -70,6 +70,12 @@ Usage of ./PolyGo:
         Use xor ofuscation
 ```
 
+Example:
+
+```Bash
+./polygo -f shellcode.bin -xor
+```
+
 ### Options
 
 * **-add**/**sub**/**xor**/**swap** : use a single spcified obfuscation method
@@ -77,10 +83,32 @@ Usage of ./PolyGo:
 * **-crazy** : use each method in a random order
 * **-brainless N** : Number of encapsulations with random methods
 
-<img src="images/brainless.gif" width="35%">
+<img src="images/brainless.gif">
 
 > ⚠️ Be careful with **-brainless** option's parameter, it might get your shellcode much longer.
 
+### Raw shellcode
+
+In order to get a raw shellcode, you first need to compile your ASM file to an object file (.o).
+
+```
+nasm -f elf32 revshell.asm
+```
+
+Then you need to retrieve opcodes from the object file using `objdump`.
+
+```
+for i in $(objdump -d decode_xor.o |grep "^ " |cut -f2); do echo -En '\x'$i; done;
+```
+
+Finally, use `echo` to write shellcode to file as raw bytes.
+
+```
+echo -n -e '<objdump output>' > shellcode.bin
+```
+
+> ⚠️ You must use single quotes when echoing shellcode to file.
+
 <p align="center">
-  Made with ♥ by Leco & Atsika
+      Made with ♥ by Leco & Atsika
 </p>
