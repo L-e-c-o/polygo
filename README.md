@@ -1,4 +1,4 @@
-# PolyGo
+# Polygo
 
 <img src="images/gopher.png" width="25%">
 
@@ -6,7 +6,7 @@ Polymorphic Linux x86 shellcode engine
 
 ## Introduction
 
-PolyGo is polymorphic shellcode engine made in Go.
+Polygo is polymorphic shellcode engine made in Go.
 
 ## 💡 Features 
 
@@ -22,7 +22,7 @@ PolyGo is polymorphic shellcode engine made in Go.
 
 ### 🌑 Obfuscation methods
 
-PolyGo uses predefined assembly stubs (decoders) for each obfuscation method (`ADD`, `SUB`, `XOR`, `SWAP`).
+Polygo uses predefined assembly stubs (decoders) for each obfuscation method (`ADD`, `SUB`, `XOR`, `SWAP`).
 
 * ADD
 
@@ -42,7 +42,7 @@ Engine swaps byte pairs in-place across the entire shellcode. If the number of b
 
 ### Muli-layer encapsulation
 
-PolyGo is capable of chaining multiple obfuscation methods. For example you can decide to chain SUB, XOR and ADD. In this case, shellcode will first be obfuscated using ADD method, then the new generated shellcode will obfuscated using XOR method and at the end this last shellcode will be obfuscated using ADD method producing the final shellcode.
+Polygo is capable of chaining multiple obfuscation methods. For example you can decide to chain SUB, XOR and ADD. In this case, shellcode will first be obfuscated using ADD method, then the new generated shellcode will obfuscated using XOR method and at the end this last shellcode will be obfuscated using ADD method producing the final shellcode.
 
 <img src="images/encapsulation.png">
 
