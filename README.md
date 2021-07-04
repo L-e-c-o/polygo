@@ -48,10 +48,16 @@ PolyGo is capable of chaining multiple obfuscation methods. For example you can 
 
 ## Usage
 
+### Compilation
+
+```
+go build polygo.go
+```
+
 ### ℹ️ Help
 
 ```Bash
-Usage of ./PolyGo:
+Usage of ./polygo:
   -add
         Use add ofuscation
   -brainless uint
