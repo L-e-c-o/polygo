@@ -81,5 +81,6 @@ Usage of ./PolyGo:
 
 > ⚠️ Be careful with **-brainless** option's parameter, it might get your shellcode much longer.
 
-
-                                                        made with ♥ by leco & atsika
+<p align="center">
+  Made with ♥ by Leco & Atsika
+</p>
