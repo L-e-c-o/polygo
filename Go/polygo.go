@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/aes"
 	crand "crypto/rand"
 	"flag"
 	"fmt"
@@ -10,13 +11,22 @@ import (
 	"time"
 )
 
-func genRandomByte() byte {
-	randomByte := make([]byte, 1)
-	for randomByte[0] == 0x0 {
-		_, err := crand.Read(randomByte)
+func contains(array []byte, b byte) bool {
+	for i := 0; i < len(array); i++ {
+		if array[i] == b {
+			return true
+		}
+	}
+	return false
+}
+
+func genRandomBytes(size int) []byte {
+	randomBytes := make([]byte, size)
+	for contains(randomBytes, 0x0) {
+		_, err := crand.Read(randomBytes)
 		check(err)
 	}
-	return randomByte[0]
+	return randomBytes
 }
 
 func add(shellcode []byte, randomByte byte) []byte {
@@ -68,7 +78,7 @@ func swap(shellcode []byte) []byte {
 }
 
 func printShellcode(shellcode []byte) {
-	fmt.Println("\nShellcode len:", len(shellcode))
+	fmt.Println("Shellcode len:", len(shellcode))
 	fmt.Println("Shellcode:")
 	for i := range shellcode {
 		fmt.Printf("\\x%02x", shellcode[i])
@@ -77,7 +87,7 @@ func printShellcode(shellcode []byte) {
 }
 
 func random(shellcode []byte) []byte {
-	randomByte := genRandomByte()
+	randomByte := genRandomBytes(1)[0]
 	method := rand.Intn(4)
 	if method == 0 {
 		fmt.Printf("[+] Add method (0x%x)\n", randomByte)
@@ -105,7 +115,7 @@ func crazy(shellcode []byte) []byte {
 	rand.Seed(time.Now().UTC().UnixNano())
 	order := rand.Perm(4)
 	for i := range order {
-		randomByte := genRandomByte()
+		randomByte := genRandomBytes(1)[0]
 		if i == 0 {
 			shellcode = add(shellcode, randomByte)
 			fmt.Printf("[+] Add method (0x%x)\n", randomByte)
@@ -134,6 +144,22 @@ func brainless(shellcode []byte, rounds uint) []byte {
 	return shellcode
 }
 
+/*########################################*/
+
+func aesEncrypt(shellcode []byte, key []byte) []byte {
+	encrypted := make([]byte, len(shellcode))
+	cipher, _ := aes.NewCipher(key)
+	size := 16
+
+	for bs, be := 0, size; bs < len(shellcode); bs, be = bs+size, be+size {
+		cipher.Encrypt(encrypted[bs:be], shellcode[bs:be])
+	}
+
+	return encrypted
+}
+
+/*########################################*/
+
 func banner() {
 	fmt.Print(`
 
@@ -155,8 +181,7 @@ func main() {
 
 	banner()
 
-	randomByte := genRandomByte()
-
+	argAes := flag.Bool("aes", false, "Encrypt shellcode using AES-128-ECB")
 	argBrainless := flag.Uint("brainless", 0, "Specify the number of recursive encapsulated obfuscation methods")
 	argCrazy := flag.Bool("crazy", false, "Recursively obfuscate the shellcode with all methods")
 	argFile := flag.String("f", "", "File containing raw shellcode")
@@ -176,6 +201,8 @@ func main() {
 	shellcode, err := ioutil.ReadFile(*argFile)
 	check(err)
 
+	randomByte := genRandomBytes(1)[0]
+
 	if *argAdd {
 		shellcode = add(shellcode, randomByte)
 	} else if *argSub {
@@ -190,6 +217,11 @@ func main() {
 		shellcode = crazy(shellcode)
 	} else if *argBrainless != 0 {
 		shellcode = brainless(shellcode, *argBrainless)
+	} else if *argAes {
+		//key := genRandomBytes(16)
+		key := []byte{0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x9, 0xcf, 0x4f, 0x3c}
+		shellcode = []byte{0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x7, 0x34}
+		shellcode = aesEncrypt(shellcode, key)
 	} else {
 		fmt.Println("Missing arguments. Specify an obfuscation method. Try", os.Args[0], "-h.")
 		os.Exit(1)
