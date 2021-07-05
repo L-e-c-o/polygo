@@ -40,7 +40,7 @@ Engine xors each shellcode's byte using a random byte. At runtime, decoder xors 
 
 Engine swaps byte pairs in-place across the entire shellcode. If the number of bytes is odd, the engine adds a NOP byte at the end. At runtime, decoded swaps them back and pass execution to the shellcode.
 
-### Muli-layer encapsulation
+### Multi-layer encapsulation
 
 Polygo is capable of chaining multiple obfuscation methods. For example you can decide to chain SUB, XOR and ADD. In this case, shellcode will first be obfuscated using ADD method, then the new generated shellcode will obfuscated using XOR method and at the end this last shellcode will be obfuscated using ADD method producing the final shellcode.
 
