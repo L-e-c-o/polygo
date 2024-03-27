@@ -1,8 +1,13 @@
 # Polygo
 
-<img src="images/gopher.png" width="25%">
+<p align="center">
+  <img src="images/gopher.png" width="25%">
+</p>
+<p align="center">
+  <b>Polymorphic Linux x86 shellcode engine</b>
+</p>
 
-Polymorphic Linux x86 shellcode engine
+
 
 ## Introduction
 
